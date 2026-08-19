@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Roll&Bowl - Welkom</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #111;
+        }
+
+        /* Donkere achtergrond */
+        .overlay {
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.78);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+
+            z-index: 1000;
+
+            animation: overlayIn 0.8s ease forwards;
+        }
+
+        /* Popup */
+        .popup {
+            position: relative;
+
+            width: min(1100px, 95vw);
+
+            animation:
+                popupIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+            transform: scale(0.65);
+            opacity: 0;
+        }
+
+        /* Afbeelding */
+        .popup-image {
+            display: block;
+
+            width: 100%;
+            height: auto;
+
+            border-radius: 24px;
+
+            box-shadow:
+                0 0 25px rgba(255, 255, 255, 0.45),
+                0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        /* X-knop */
+        .close-button {
+            position: absolute;
+
+            top: 3.5%;
+            right: 3.5%;
+
+            width: 58px;
+            height: 58px;
+
+            border-radius: 50%;
+
+            border: 2px solid white;
+
+            background: rgba(0, 0, 0, 0.45);
+
+            color: white;
+
+            font-size: 38px;
+            font-weight: 200;
+
+            line-height: 50px;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            z-index: 10;
+
+            transition:
+                transform 0.25s ease,
+                background 0.25s ease;
+        }
+
+        .close-button:hover {
+            transform: scale(1.12) rotate(5deg);
+
+            background: rgba(0, 0, 0, 0.75);
+        }
+
+        /*
+           Onzichtbare knop boven de bowlingbal
+        */
+        .continue-button {
+            position: absolute;
+
+            left: 45%;
+            top: 77%;
+
+            width: 18%;
+            aspect-ratio: 1 / 1;
+
+            border-radius: 50%;
+
+            background: transparent;
+
+            border: none;
+
+            cursor: pointer;
+
+            z-index: 20;
+
+            transition: transform 0.25s ease;
+        }
+
+        .continue-button:hover {
+            transform: scale(1.08);
+        }
+
+        /* Gloed bij hover */
+        .continue-button::after {
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 20px rgba(255, 255, 255, 0.6);
+
+            opacity: 0;
+
+            transition: opacity 0.25s ease;
+        }
+
+        .continue-button:hover::after {
+            opacity: 1;
+        }
+
+        /* Sluitanimatie */
+        .overlay.closing {
+            animation: overlayOut 0.5s ease forwards;
+        }
+
+        .overlay.closing .popup {
+            animation: popupOut 0.5s ease forwards;
+        }
+
+        /* Animaties */
+
+        @keyframes overlayIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popupIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.65);
+            }
+
+            60% {
+                opacity: 1;
+                transform: scale(1.04);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes overlayOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes popupOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: scale(0.85);
+            }
+        }
+
+        /* Smartphone */
+        @media (max-width: 700px) {
+
+            .overlay {
+                padding: 10px;
+            }
+
+            .popup {
+                width: 96vw;
+            }
+
+            .popup-image {
+                border-radius: 16px;
+            }
+
+            .close-button {
+                width: 42px;
+                height: 42px;
+
+                font-size: 28px;
+
+                line-height: 36px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- WELKOMSTPOPUP -->
+
+    <div class="overlay" id="welcomeOverlay">
+
+        <div class="popup">
+
+            <!-- Jouw afbeelding -->
+            <img
+                src="startpopup.png"
+                alt="Welkom bij Roll&Bowl"
+                class="popup-image"
+            >
+
+            <!-- Sluiten -->
+            <button
+                class="close-button"
+                onclick="closePopup()"
+                aria-label="Sluiten">
+                ×
+            </button>
+
+            <!-- Bowlingbal = doorgaan -->
+            <button
+                class="continue-button"
+                onclick="goToWebsite()"
+                aria-label="Doorgaan">
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        /* Jouw Google Sites homepage */
+
+        const websiteURL =
+            "https://sites.google.com/view/rollbowl/homepage";
+
+
+        /* Popup sluiten */
+
+        function closePopup() {
+
+            const overlay =
+                document.getElementById("welcomeOverlay");
+
+            overlay.classList.add("closing");
+
+            setTimeout(function() {
+
+                overlay.style.display = "none";
+
+            }, 500);
+        }
+
+
+        /* Klik op de bowlingbal */
+
+        function goToWebsite() {
+
+            const overlay =
+                document.getElementById("welcomeOverlay");
+
+            overlay.classList.add("closing");
+
+            setTimeout(function() {
+
+                window.location.href = websiteURL;
+
+            }, 500);
+        }
+
+
+        /* ESC-toets sluit popup */
+
+        document.addEventListener("keydown", function(event) {
+
+            if (event.key === "Escape") {
+
+                closePopup();
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
